@@ -182,10 +182,90 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 20)
-        .atr("fill", "blue")
+        .attr("r", 10)
+        .attr("fill", "blue")
         .attr("opacity", ".5");
 
+    // Append text inside circles
+    var circlesText = circlesGroup.append("text")
+        .text(d => d.abbr)
+        .attr("dx", d => xLinearScale(d[chosenXAxis]))
+        .attr("dy", d => yLinearScale(d[chosenYAxis]))
+        .classed("stateText", true);
+
     // Create group for three x-axis labels
+    var xLabelsGroup = chartGroup.append("g")
+        .attr("transform", `translate(${width / 2}, ${height + 20})`);
+
+    var povertyLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 20)
+        .attr("value", "poverty")
+        .classed("active", true)
+        .text("In Poverty (%)");
+
+    var ageLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "age")
+        .classed("inactive", true)
+        .text("Age (Median)");
+
+    var incomeLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "age")
+        .classed("inactive", true)
+        .text("Household Income (Median)");
+
+    // Create group for three y-axis labels
+    var yLabelsGroup = chartGroup.append("g")
+        .attr("transform", "rotate(-90)");
+
+    var obesityLabel = yLabelsGroup.append("text")
+        .attr("y", -80)
+        .attr("x", -(height/2))
+        .attr("dy", "1em")
+        .attr("value", "obesity")
+        .classed("active", true)
+        .text("Obese (%)");
+
+    var smokesLabel = yLabelsGroup.append("text")
+        .attr("y", -60)
+        .attr("x", -(height/2))
+        .attr("dy", "1em")
+        .attr("value", "smokes")
+        .classed("inactive", true)
+        .text("Smokes (%)");
     
-})
+    var healthcareLabel = yLabelsGroup.append("text")
+        .attr("y", -40)
+        .attr("x", -(height/2))
+        .attr("dy", "1em")
+        .attr("value", "healthcare")
+        .classed("inactive", true)
+        .text("Lacks Healthcare (%)");
+
+    // Update ToolTip function
+    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+    // X axis labels event listener
+    xLabelsGroup.selectAll("text")
+        .on("click", function() {
+            var value = d3.select(this).attr("value");
+            if (value !== chosenXAxis) {
+                chosenXAxis = value;
+
+                xLinearScale = xScale(data, chosenXAxis);
+
+                xAxis = renderXAxis(xLinearScale, xAxis);
+
+                circlesGroup = renderXCircles(circlesGroup, xLinearScale, chosenXAxis);
+
+                circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+
+                if (chosenXAxis === "")
+            }
+        }
+
+    })
