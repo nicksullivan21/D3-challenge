@@ -121,25 +121,25 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     var xLabel;
 
     if (chosenXAxis === "poverty") {
-        xLabel = "Poverty:";
+        xLabel = "Poverty (%):";
     }
     else if (chosenXAxis === "age") {
         xLabel = "Age:"
     }
     else {
-        xLabel = "Household Income:"
+        xLabel = "Household Income ($):"
     }
 
     var yLabel;
 
     if (chosenYAxis === "obesity") {
-        yLabel = "Obesity:"
+        yLabel = "Obesity (%):"
     }
     else if (chosenYAxis === "smokes") {
-        yLabel = "Smokes:"
+        yLabel = "Smokes (%):"
     }
     else {
-        yLabel = "Healthcare:"
+        yLabel = "Lacks Healthcare (%):"
     }
 
     var toolTip = d3.tip()
@@ -204,15 +204,14 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     var circles = circlesGroup.append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 10)
-        .attr("fill", "blue")
-        .attr("opacity", ".5");
+        .attr("r", 15)
+        .classed("stateCircle", true);
 
     // Append text inside circles
     var circlesText = circlesGroup.append("text")
         .text(d => d.abbr)
         .attr("dx", d => xLinearScale(d[chosenXAxis]))
-        .attr("dy", d => yLinearScale(d[chosenYAxis]))
+        .attr("dy", d => yLinearScale(d[chosenYAxis])+5)
         .classed("stateText", true);
 
     // Create group for three x-axis labels
